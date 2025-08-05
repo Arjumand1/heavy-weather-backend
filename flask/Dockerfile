@@ -14,7 +14,11 @@ RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python
 
 RUN poetry --version
 
-COPY ./flask/pyproject.toml ./flask/poetry.lock ./
+COPY ./flask/pyproject.toml ./
+
+# Generate lock file if it doesn't exist, then copy it if it does exist
+RUN poetry lock || echo "Generated new lock file"
+COPY ./flask/poetry.loc* ./
 
 # Allow installing dev dependencies to run tests
 ARG INSTALL_DEV=false

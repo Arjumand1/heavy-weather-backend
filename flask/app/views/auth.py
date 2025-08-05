@@ -65,7 +65,7 @@ class Login(Resource):
         return get_success_response(person=person.as_dict(), access_token=access_token, expiry=expiry)
 
 
-@auth_api.route('/forgot_password', doc=dict(description="Send reset password link"))
+@auth_api.route('/forgot-password', doc=dict(description="Send reset password link"))
 class ForgotPassword(Resource):
     @auth_api.expect(
         {'type': 'object', 'properties': {
@@ -83,7 +83,7 @@ class ForgotPassword(Resource):
 
 
 @auth_api.route(
-    '/reset_password/<string:token>/<string:uidb64>',
+    '/reset-password/<string:token>/<string:uidb64>',
     doc=dict(description="Update the password using reset password link")
 )
 class ResetPassword(Resource):
@@ -104,3 +104,10 @@ class ResetPassword(Resource):
             expiry=expiry,
             person=person_obj.as_dict()
         )
+
+
+@auth_api.route('/logout')
+class Logout(Resource):
+    def post(self):
+        """Logout user - client-side token handling"""
+        return get_success_response(message="Logged out successfully")

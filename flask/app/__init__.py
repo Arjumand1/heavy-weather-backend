@@ -13,16 +13,17 @@ from common.utils.version import get_service_version, get_project_name
 from logger import set_request_exception_signal, logger
 
 
-
 # Initialize Flask-Restx
 api = Api(
     version=get_service_version(),
     title=get_project_name(),
-    description="Welcome to the API documentation of Rococo Sample API",
-    authorizations={'Bearer': {'type': 'apiKey', 'in': 'header', 'name': 'Authorization'}},
+    description="Welcome to the API documentation of Heavy Weather API",
+    authorizations={'Bearer': {'type': 'apiKey',
+                               'in': 'header', 'name': 'Authorization'}},
     security='Bearer',
     doc='/api-doc'
 )
+
 
 def create_app():
     config = get_config()
@@ -39,14 +40,14 @@ def create_app():
 
     api.init_app(app)
 
-    # Add simple CORS support
-    CORS(app)
+    # Add CORS support for frontend communication
+    CORS(app, origins="*")
 
     PooledConnectionPlugin(app, database_type="postgres")
 
     @app.route('/')
     def hello_world():
-        return 'Welcome to Rococo Sample API.'
+        return 'Welcome to Heavy Weather API.'
 
     @app.errorhandler(ModelValidationError)
     def handle_model_validation_error(exception):
@@ -59,7 +60,6 @@ def create_app():
         # Handle your custom exception here
         from app.helpers.response import get_failure_response
         return get_failure_response(message=str(exception))
-
 
     @app.errorhandler(APIException)
     def handle_application_error(exception):
